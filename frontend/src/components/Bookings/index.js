@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-const token = Cookies.get('token');
+import './index.css';
 
 function Bookings() {
     const [source, setSource] = useState('');
@@ -10,6 +10,7 @@ function Bookings() {
     const [id, setId] = useState('');
     const [trains, setTrains] = useState([]);
     const navigate = useNavigate();
+    const token = Cookies.get('token');
 
     useEffect(() => {
         if (token === undefined || token === null) {
@@ -17,7 +18,7 @@ function Bookings() {
         } else {
             fetchBookings();
         }
-        
+
     }, []);
 
     const fetchBookings = async () => {
@@ -47,6 +48,7 @@ function Bookings() {
         console.log(await response.json());
         fetchBookings();
     };
+
     const getTrains = async () => {
         const options = {
             method: "GET",
@@ -61,37 +63,43 @@ function Bookings() {
         console.log(data);
         setTrains(data);
     };
+
     const logout = () => {
         Cookies.remove('token');
         navigate('/login');
     }
 
     return (
-        <div>
-            <button onClick={logout}>Logout</button><br />
-            <h2>Bookings</h2>
-            <input type="text" placeholder="train no" onChange={(e) => setId(e.target.value)} />
-            <button onClick={bookTrain}>Book Train</button><br />
-            {bookings !== undefined &&
-                < ul >
-                    {
-                        bookings.map(booking => (
-                            <li key={booking.id}>Train ID: {booking.train_id} - Seat: {booking.seat_number}</li>
-                        ))
-                    }
-                </ul>
-            }
-            <Link to="/train">Trains</Link>
-            <input type="text" placeholder="Source" onChange={(e) => setSource(e.target.value)} />
-            <input type="text" placeholder="Destination" onChange={(e) => setDestination(e.target.value)} />
-            <button onClick={getTrains}>Get Trains</button>
-            {trains !== undefined &&
-                <ul>
-                    {trains.map(train => (
-                        <li key={train.id}>{train.train_name} - Seats: {train.available_seats}</li>
-                    ))}
-                </ul>
-            }
+        <div className='booking-container'>
+            <div>
+                
+                <h2>Bookings</h2>
+                <button onClick={logout} className='button button5'>Logout</button><br />
+                <input type="text" placeholder="train no" onChange={(e) => setId(e.target.value)} className='form-control input' />
+                <div>
+                    <button onClick={bookTrain} className='button button5'>Book Train</button><br />
+                </div>
+                {bookings !== undefined &&
+                    < ul >
+                        {
+                            bookings.map(booking => (
+                                <li key={booking.id}>Train ID: {booking.train_id} - Seat: {booking.seat_number}</li>
+                            ))
+                        }
+                    </ul>
+                }
+                <Link to="/train" className='button button5'>Trains</Link><br /><br />
+                <input type="text" className='form-control input' placeholder="Source" onChange={(e) => setSource(e.target.value)} /><br />
+                <input type="text" className='form-control input' placeholder="Destination" onChange={(e) => setDestination(e.target.value)} /><br />
+                <button onClick={getTrains} className='button button5'>Get Trains</button>
+                {trains !== undefined &&
+                    <ul>
+                        {trains.map(train => (
+                            <li key={train.id}>{train.train_name} - Seats: {train.available_seats}</li>
+                        ))}
+                    </ul>
+                }
+            </div>
         </div >
     );
 }

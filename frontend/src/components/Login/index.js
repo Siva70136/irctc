@@ -33,7 +33,7 @@ function Login() {
       const data = await res.json();
       Cookies.set("token", data.token, {
         expires: 30,
-        path: '/',
+        path:"/",
       });
 
       await new Promise((resolve) => {
